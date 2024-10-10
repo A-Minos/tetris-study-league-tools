@@ -211,6 +211,10 @@ async def result() -> None:
                 if table.rows:
                     ui.button('下载表格', on_click=lambda: ui.download(to_excel(get_user_info.result), 'test.xlsx'))
                     ui.button('下载头像', on_click=download_avatars)
+                    ui.button(
+                        '下载全部',
+                        on_click=lambda: ui.download(to_zip(get_user_info.result, include_table=True), 'all.zip'),
+                    )
         ui.notify(data)
 
     timer = ui.timer(0.1, callback=timer_callback)
