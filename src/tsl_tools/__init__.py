@@ -105,7 +105,7 @@ async def get_user_info(id: int, user_id_or_name: str) -> UserInfo:
 
 def update_table(task: Task[UserInfo], table: ui.table, queue: Queue) -> None:
     result = task.result()
-    table.add_rows(
+    table.add_row(
         {
             'sn': result.id,
             'user': result.user.name.upper(),
@@ -178,7 +178,7 @@ async def page() -> None:
     users = ui.textarea('用户名 每行一个').classes('w-full').bind_value(globals(), 'inputs')
     feedback = ui.markdown()
     users.on_value_change(partial(validate_users, feedback))
-    ui.button('提交', on_click=lambda: ui.open('/result'))
+    ui.button('提交', on_click=lambda: ui.navigate.to('/result'))
 
 
 @ui.page('/result')
@@ -207,7 +207,7 @@ async def result() -> None:
             timer.deactivate()
             spinner.delete()
             with ui.row():
-                ui.button('返回', on_click=lambda: ui.open('/') or get_user_info.clear())
+                ui.button('返回', on_click=lambda: ui.navigate.to('/') and get_user_info.clear())
                 if table.rows:
                     ui.button('下载表格', on_click=lambda: ui.download(to_excel(get_user_info.result), 'test.xlsx'))
                     ui.button('下载头像', on_click=download_avatars)
