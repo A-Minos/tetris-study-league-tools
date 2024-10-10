@@ -222,4 +222,5 @@ async def result() -> None:
     task.append(create_task(update_result(table, queue)))
 
 
-ui.run(port=5555, show=False, dark=True, language='zh-CN', reload=False)
+def main() -> None:
+    ui.run(port=5555, show=True, dark=True, language='zh-CN', reload=False)
