@@ -23,7 +23,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.uv]
-dev-dependencies = ["ruff>=0.6.1", "mypy>=1.11.1"]
+dev-dependencies = ["basedpyright>=1.18.4", "ruff>=0.6.1"]
 
 [tool.ruff]
 line-length = 120
