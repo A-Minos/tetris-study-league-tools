@@ -151,16 +151,12 @@ def to_excel(data: list[UserInfo]) -> bytes:
     worksheet.write('C1', '段位')
     worksheet.write('D1', 'TR')
     worksheet.write('E1', '40L')
-    worksheet.write('F1', '头像')
     for i, v in enumerate(data):
         worksheet.write(f'A{i+2}', v.id)
         worksheet.write(f'B{i+2}', v.user.name.upper())
         worksheet.write(f'C{i+2}', v.rank)
         worksheet.write(f'D{i+2}', v.tr)
         worksheet.write(f'E{i+2}', v.sprint)
-        worksheet.insert_image(
-            f'F{i+2}', f'{v.user.name.upper()}.jpg', {'image_data': BytesIO(v.avatar), 'x_scale': 0.9, 'y_scale': 1.1}
-        )
     workbook.close()
     return io.getvalue()
 
