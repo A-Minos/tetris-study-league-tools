@@ -6,7 +6,7 @@ from datetime import timedelta
 from functools import partial
 from hashlib import md5
 from io import BytesIO
-from multiprocessing import Manager, Queue
+from queue import Queue
 from typing import Any
 
 import xlsxwriter
@@ -116,7 +116,7 @@ def update_table(task: Task[UserInfo], table: ui.table, queue: Queue) -> None:
     queue.put(f'{result.user.name.upper()} 获取完成')
 
 
-async def update_result(table: ui.table, queue: Queue) -> None:
+async def update_result(table: ui.table, queue: Queue[str]) -> None:
     tasks = []
     callback = partial(update_table, table=table, queue=queue)
     for i, v in enumerate(inputs.splitlines()):
@@ -180,7 +180,7 @@ async def result() -> None:
         {'name': 'sprint', 'label': '40L', 'field': 'sprint', 'required': True, 'sortable': True},
     ]
     table = ui.table(columns=columns, rows=[], row_key='name')
-    queue = Manager().Queue()
+    queue = Queue[str]()
 
     def timer_callback() -> None:
         if queue.empty():
