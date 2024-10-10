@@ -8,6 +8,7 @@ from hashlib import md5
 from io import BytesIO
 from queue import Queue
 from typing import Any
+from zipfile import ZipFile
 
 import xlsxwriter
 from nicegui import app, ui
@@ -161,6 +162,16 @@ def to_excel(data: list[UserInfo]) -> bytes:
     return io.getvalue()
 
 
+def to_zip(data: list[UserInfo], *, include_table: bool = False) -> bytes:
+    io = BytesIO()
+    with ZipFile(io, 'w') as zf:
+        for i in data:
+            zf.writestr(f'{i.user.name.upper()}.{'svg' if i.avatar.startswith(b'<svg') else 'jpg'}', i.avatar)
+        if include_table is True:
+            zf.writestr('table.xlsx', to_excel(data))
+    return io.getvalue()
+
+
 @ui.page('/')
 async def page() -> None:
     ui.label('TSL-Tools').style('font-size: 24px; font-weight: bold; text-align: center; margin-top: 20px;')
@@ -182,6 +193,13 @@ async def result() -> None:
     table = ui.table(columns=columns, rows=[], row_key='name')
     queue = Queue[str]()
 
+    def download_avatars() -> None:
+        if len(get_user_info.result) > 3:  # noqa: PLR2004
+            ui.download(to_zip(get_user_info.result), '头像.zip')
+        else:
+            for i in get_user_info.result:
+                ui.download(i.avatar, f'{i.user.name.upper()}.{'svg' if i.avatar.startswith(b'<svg') else 'jpg'}')
+
     def timer_callback() -> None:
         if queue.empty():
             return
@@ -192,12 +210,7 @@ async def result() -> None:
                 ui.button('返回', on_click=lambda: ui.open('/') or get_user_info.clear())
                 if table.rows:
                     ui.button('下载表格', on_click=lambda: ui.download(to_excel(get_user_info.result), 'test.xlsx'))
-                    ui.button(
-                        '下载头像',
-                        on_click=lambda: [
-                            ui.download(i.avatar, f'{i.user.name.upper()}.jpg') for i in get_user_info.result
-                        ],
-                    )
+                    ui.button('下载头像', on_click=download_avatars)
         ui.notify(data)
 
     timer = ui.timer(0.1, callback=timer_callback)
