@@ -1,7 +1,7 @@
 [project]
-name = "tsl-tools"
+name = "tetris-study-league-tools"
 version = "0.1.0"
-description = "Add your description here"
+description = "一个供研究联赛使用的小工具"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -23,7 +23,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project.scripts]
-tsl_tools = "tsl_tools:main"
+tsl = "tetris_study_league_tools:main"
 
 [tool.uv]
 dev-dependencies = ["basedpyright>=1.18.4", "ruff>=0.6.1"]

@@ -1,8 +1,8 @@
-# TSL-Tools
+# Tetris Study League Tools
 
 ## Use
 
 ```shell
-uv sync
-python -m tsl_tools
+uv tool install tetris_study_league_tools
+uvx tsl
 ```
