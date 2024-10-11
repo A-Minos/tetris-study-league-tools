@@ -36,7 +36,7 @@ jobs:
             - name: Publish Package to PyPI
               run: |
                   uv build
-                  uv publish
+                  uv publish --trusted-publishing always
 
             - name: Publish Package to GitHub Release
               run: gh release create ${{ steps.version.outputs.TAG_NAME }} dist/*.tar.gz dist/*.whl -t "🔖 ${{ steps.version.outputs.TAG_NAME }}" --generate-notes
